@@ -1,9 +1,9 @@
-kvstore
+kvstore <br />
 
-mkdir build
-cd build
-cmake ..
-make
-cd ..
-bin/server_client_test
+mkdir build <br />
+cd build <br />
+cmake .. <br />
+make <br />
+cd .. <br />
+bin/server_client_test <br />
 bin/transaction_test
