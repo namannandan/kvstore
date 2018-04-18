@@ -1,3 +1,5 @@
+kvstore
+
 mkdir build
 cd build
 cmake ..
