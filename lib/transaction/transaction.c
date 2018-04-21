@@ -3,13 +3,14 @@
 #include <string.h>
 
 transaction *build_transaction(char op, char ack, unsigned long key, size_t value_length, char *value) {
-	//allocate space	
+	//allocate space for the transaction	
 	transaction *trans;
 	if ((trans = (transaction *) malloc(sizeof(transaction)))==NULL) {
 		perror ("malloc failed: ");
 		return (NULL);
 	}
 	char *buffer;
+	//allocate space to store a copy of the value
 	if ((buffer = (char *)malloc(value_length)) == NULL) {
 		perror("malloc failed: ");
 		return (NULL);
