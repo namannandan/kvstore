@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include "server.h"
-#include "client.h"
-#include "transaction.h"
+#include "kvstore.h"
+#include <stddef.h>
 
 int main()
 {
-	pthread_t s_tid, c_tid;
-	printf("Starting server and client\n");
-	pthread_create(&s_tid, NULL, server_thread, NULL);
-	pthread_create(&c_tid, NULL, client_thread, NULL);
-	pthread_join(s_tid, NULL);
-	pthread_join(c_tid, NULL);
-	printf("Done\n");
+	char *buf;
+	size_t buf_len;
+	kvstore_init();
+	put(1234, "cool stuff", 10);
+	buf = get(1234, &buf_len);
+	fwrite(buf, sizeof(char), buf_len, stdout);
+	printf("\n");
+	free(buf);
 	exit(0);
 }

@@ -36,7 +36,8 @@ void free_transaction(transaction *t) {
 char *serialize_transaction (transaction *t) {
 	//allocate space for the buffer
 	char *buffer;
-	unsigned long buffer_length = sizeof(t->op) 
+	unsigned long buffer_length = sizeof(unsigned long)
+				    + sizeof(t->op) 
 				    + sizeof(t->ack)
 				    + sizeof(t->key)
 				    + sizeof(t->value_length)
@@ -47,6 +48,9 @@ char *serialize_transaction (transaction *t) {
 	}
 	//copy data into the buffer
 	char *buffer_ptr = buffer;
+	//initially store the total length of the buffer
+	memcpy(buffer_ptr, &(buffer_length), sizeof(buffer_length));
+	buffer_ptr = buffer_ptr + sizeof(buffer_length);
 	memcpy(buffer_ptr, &(t->op), sizeof(t->op));
 	buffer_ptr = buffer_ptr + sizeof(t->op);
 	memcpy(buffer_ptr, &(t->ack), sizeof(t->ack));
@@ -65,6 +69,8 @@ transaction *deserialize_transaction (char *buffer) {
 	transaction *trans = build_transaction (0, 0, 0, 0, NULL);
 	//fill in the details of the transaction
 	char *buffer_ptr = buffer;
+	//skip the buffer length stored in the initial portion of the buffer
+	buffer_ptr = buffer_ptr + sizeof(unsigned long);
 	trans->op = *(char *)buffer_ptr;
 	buffer_ptr = buffer_ptr + sizeof(trans->op);
 	trans->ack = *(char *)buffer_ptr;
