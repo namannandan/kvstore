@@ -12,6 +12,6 @@ int main()
 	buf = get(1234, &buf_len);
 	fwrite(buf, sizeof(char), buf_len, stdout);
 	printf("\n");
-	free(buf);
+	//free(buf);
 	exit(0);
 }

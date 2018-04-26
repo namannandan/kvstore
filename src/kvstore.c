@@ -2,6 +2,7 @@
 #include "transaction.h"
 #include "client.h"
 #include "server.h"
+#include "storage.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,10 +20,11 @@ void kvstore_init() {
 	//initialize the locks
 	pthread_mutex_init(&storage_lock, NULL);
 	pthread_mutex_init(&network_lock, NULL);
-	//TODO:initialize storage here
 	//start the server thread here
 	//pass storage lock as argument	
 	pthread_create(&s_tid, NULL, server, &storage_lock);
+	//initialize storage
+	st_init();
 }
 
 int put(unsigned long key, char *value, size_t value_length) {
