@@ -4,6 +4,8 @@ set (network_source_files
 	server.h
 	client.c
 	client.h
+	network.c
+	network.h
 )
 
 #indicate where the library files need to be put
