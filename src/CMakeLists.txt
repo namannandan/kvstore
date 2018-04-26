@@ -9,10 +9,10 @@ set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/obj)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/obj)
 
 #include directories
-include_directories(../lib/transaction ../lib/network)
+include_directories(../lib/transaction ../lib/network ../lib/storage)
 
 #add as a library
 add_library(kvstore STATIC ${kvstore_source_files})
 
 #add link targets
-target_link_libraries(kvstore transaction network)
+target_link_libraries(kvstore transaction storage network)

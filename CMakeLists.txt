@@ -10,11 +10,12 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 #add subdirectories
 add_subdirectory(lib/transaction)
+add_subdirectory(lib/storage)
 add_subdirectory(lib/network)
 add_subdirectory(src)
 
 #include directories
-include_directories(lib/transaction lib/network src)
+include_directories(lib/transaction src)
 
 #executable to be created
 add_executable(server_client_test test/server_client_test.c)

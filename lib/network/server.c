@@ -5,8 +5,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <stddef.h>
 #include "server.h"
 #include "transaction.h"
+#include "storage.h"
 
 #define PORT 8080
 
@@ -21,7 +23,8 @@ void *server(void *arg)
 	transaction *response;
 	char *response_char_buffer;
 	pthread_mutex_t *storage_lock = (pthread_mutex_t *)arg;
-	char *dummy = "hello world";
+	char *val;
+	size_t val_length = 0;
 	// Creating socket file descriptor
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
@@ -60,16 +63,42 @@ void *server(void *arg)
 		request = deserialize_transaction(buffer);
 		//grab lock to access storage
 		pthread_mutex_lock(storage_lock);
-		//TODO:access storage to get or store data
+		//access storage
+		if (request->op == 0) {
+			//get data
+			val = st_get(request->key, &val_length);
+		}
+		else if (request->op == 1) {
+			//store the data
+			st_put(request->key, request->value, request->value_length);
+		}
+		else if (request->op == 2) {
+			//TODO:delete
+		}
+		else {
+			//TODO:handle this
+		}
 		//release lock
 		pthread_mutex_unlock(storage_lock);
-		//echo back the same data
-		response = build_transaction(request->op, 1, request->key, 11, dummy);
+		//construct response based on the type of request
+		if (request->op == 0) {
+			response = build_transaction(request->op, 1, request->key, val_length, val);
+			free(val);
+		}
+		else if (request->op == 1) {
+			response = build_transaction(request->op, 1, request->key, 0, NULL); 
+		}
+		else if(request->op == 2) {
+			//TODO:handle this
+		}
+		else {
+			//TODO:handle this
+		}
 		response_char_buffer = serialize_transaction(response);
 		send(new_socket, response_char_buffer, *(size_t *)response_char_buffer, 0);
 		//free up space
 		free_transaction(request);
-		free_transaction(response);
+		free_transaction(response);	
 		free(response_char_buffer);
 		//close connection to client
 		close(new_socket);
