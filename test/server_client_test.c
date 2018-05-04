@@ -3,12 +3,16 @@
 #include "kvstore.h"
 #include <stddef.h>
 
-int main()
-{
+int main(int argc, char *argv[]) {
+	if (argc != 2) {
+		printf("provide only one argument (node id)\n");
+		exit(1);
+	}
+	unsigned long id = atoi(argv[1]);
 	char *buf;
 	size_t buf_len;
 	printf("client-server test\n\n");
-	kvstore_init();
+	kvstore_init(id);
 	printf("storing data directly to hash table\n");
 	printf("key:1234, value:hello world\n");	
 	put(1234, "hello world", 11);

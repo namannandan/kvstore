@@ -5,11 +5,12 @@
 #include <string.h>
 #include <stddef.h>
 #include "client.h"
+#include "nw_config.h"
 
 #define PORT 8080
 
 //client is responsible for sending and receiving byte streams
-char *client(char *send_buffer) {
+char *client(char *send_buffer, unsigned long id) {
 	struct sockaddr_in address;
 	int sock = 0, valread;
 	struct sockaddr_in serv_addr;
@@ -21,9 +22,9 @@ char *client(char *send_buffer) {
 	}
 	memset(&serv_addr, '0', sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(PORT);
+	serv_addr.sin_port = htons(server_port_numbers[id]);
 	// Convert IPv4 and IPv6 addresses from text to binary form
-	if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) {
+	if(inet_pton(AF_INET, server_ip_addresses[id], &serv_addr.sin_addr)<=0) {
 		printf("\nInvalid address/ Address not supported \n");
 		return (NULL);
 	}
