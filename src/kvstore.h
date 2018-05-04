@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 //function prototypes
-void kvstore_init();
+void kvstore_init(unsigned long id);
 int put(unsigned long key, char *value, size_t value_length);
 char* get(unsigned long key, size_t* value_length);
 

@@ -9,8 +9,7 @@
 #include "server.h"
 #include "transaction.h"
 #include "storage.h"
-
-#define PORT 8080
+#include "nw_config.h"
 
 void *server(void *arg)
 {
@@ -39,7 +38,7 @@ void *server(void *arg)
 	}
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-	address.sin_port = htons( PORT );
+	address.sin_port = htons(server_port_numbers[node_id]);
 	// Forcefully attaching socket to the port 8080
 	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0)
 	{

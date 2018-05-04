@@ -2,13 +2,20 @@
 #include "transaction.h"
 #include "client.h"
 #include "server.h"
+#include "nw_config.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
 
-pthread_t nw_init(pthread_mutex_t *storage_lock) {
+//define the global variables
+unsigned long node_id = 0;
+unsigned long server_port_numbers[NUM_NODES] = {8080, 8081/*, 8082, 8083, 8084*/};
+char *server_ip_addresses[NUM_NODES] = {"127.0.0.1", "128.211.140.136"/*, "127.0.0.1", "127.0.0.1", "127.0.0.1"*/}; 
+
+pthread_t nw_init(pthread_mutex_t *storage_lock, unsigned long id) {
+	node_id = id;
 	pthread_t s_tid;
 	//start the server thread here
 	//pass storage lock as argument	
@@ -23,7 +30,7 @@ int nw_put(unsigned long key, char *value, size_t value_length, pthread_mutex_t 
 	transaction *response = NULL;
 	//grab lock to access client
 	pthread_mutex_lock(network_lock);
-	response_char_buffer = client(request_char_buffer);
+	response_char_buffer = client(request_char_buffer, key%NUM_NODES);
 	pthread_mutex_unlock(network_lock);
 	response = deserialize_transaction(response_char_buffer);
 	//free allocated space
@@ -47,7 +54,7 @@ char *nw_get(unsigned long key, size_t *value_length, pthread_mutex_t *network_l
 	transaction *response = NULL;
 	char *ret = NULL;
 	pthread_mutex_lock(network_lock);
-	response_char_buffer = client(request_char_buffer);
+	response_char_buffer = client(request_char_buffer, key%NUM_NODES);
 	pthread_mutex_unlock(network_lock);
 	response = deserialize_transaction(response_char_buffer);
 	//free allocated space

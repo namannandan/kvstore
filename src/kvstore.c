@@ -1,6 +1,7 @@
 #include "kvstore.h"
 #include "storage.h"
 #include "network.h"
+#include "nw_config.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,14 +13,14 @@
 static pthread_mutex_t storage_lock;
 static pthread_mutex_t network_lock;
 
-void kvstore_init() {
+void kvstore_init(unsigned long id) {
 	//server thread id
 	pthread_t s_tid;
 	//initialize the locks
 	pthread_mutex_init(&storage_lock, NULL);
 	pthread_mutex_init(&network_lock, NULL);
 	//initialize network
-	s_tid = nw_init(&storage_lock);
+	s_tid = nw_init(&storage_lock, id);
 	//initialize storage
 	st_init();
 }
@@ -27,7 +28,7 @@ void kvstore_init() {
 int put(unsigned long key, char *value, size_t value_length) {
 	int ret = 0;
 	//check if this key maps to some other node
-	if(key%2 == 0) {
+	if(key%NUM_NODES == node_id) {
 		//store on this node
 		pthread_mutex_lock(&storage_lock);
 		ret = st_put(key, value, value_length);
@@ -43,7 +44,7 @@ int put(unsigned long key, char *value, size_t value_length) {
 char *get(unsigned long key, size_t *value_length) {
 	char *ret = NULL;
 	//check if key maps to a different node
-	if(key%2 == 0) {
+	if(key%NUM_NODES == node_id) {
 		//get value from this node
 		ret = st_get(key, value_length);
 	}

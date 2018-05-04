@@ -1,5 +1,6 @@
 #add all source files
 set (network_source_files
+	nw_config.h
 	server.c
 	server.h
 	client.c
