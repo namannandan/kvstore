@@ -12,7 +12,7 @@
 //define the global variables
 unsigned long node_id = 0;
 unsigned long server_port_numbers[NUM_NODES] = {8080, 8081/*, 8082, 8083, 8084*/};
-char *server_ip_addresses[NUM_NODES] = {"127.0.0.1", "128.211.140.136"/*, "127.0.0.1", "127.0.0.1", "127.0.0.1"*/}; 
+char *server_ip_addresses[NUM_NODES] = {"128.46.4.62", "128.211.140.138"/*, "127.0.0.1", "127.0.0.1", "127.0.0.1"*/}; 
 
 pthread_t nw_init(pthread_mutex_t *storage_lock, unsigned long id) {
 	node_id = id;
