@@ -37,7 +37,11 @@ void *server(void *arg)
 		exit(EXIT_FAILURE);
 	}
 	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	//address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	if(inet_pton(AF_INET, server_ip_addresses[node_id], &address.sin_addr)<=0) {
+		printf("\nInvalid address/ Address not supported \n");
+		return (NULL);
+	}
 	address.sin_port = htons(server_port_numbers[node_id]);
 	// Forcefully attaching socket to the port 8080
 	if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0)
