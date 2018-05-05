@@ -21,11 +21,13 @@ include_directories(lib/transaction src)
 add_executable(server_client_test test/server_client_test.c)
 add_executable(transaction_test test/transaction_test.c)
 add_executable(participating_node test/participating_node.c)
+add_executable(throughput_test test/throughput_test.c)
 
 #linking
 target_link_libraries(server_client_test kvstore)
 target_link_libraries(transaction_test transaction)
 target_link_libraries(participating_node kvstore)
+target_link_libraries(throughput_test kvstore)
 
 #add linker flags
 SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_CXX_FLAGS} -pthread")
